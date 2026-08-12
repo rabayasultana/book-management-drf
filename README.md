@@ -166,22 +166,10 @@ Exit:
 
 # Environment Variables
 
-The project uses `python-dotenv`.
-
-Django settings load environment variables with:
-
-```python
-from dotenv import load_dotenv
-
-load_dotenv()
-```
-
 Create `.env` in the project root:
 
 ```env
 SECRET_KEY=your-secret-key
-DEBUG=True
-
 DB_NAME=book_management_db
 DB_USER=postgres
 DB_PASSWORD=your_postgresql_password
@@ -199,8 +187,6 @@ Example:
 
 ```env
 SECRET_KEY=your-secret-key
-DEBUG=True
-
 DB_NAME=book_management_db
 DB_USER=postgres
 DB_PASSWORD=your_postgresql_password
@@ -846,17 +832,11 @@ Restore the dump:
 
 ```bash
 pg_restore \
-    -U postgres \
+    -U username \
     -h 127.0.0.1 \
     -p 5432 \
     -d book_management_db \
     database/book_management_db.dump
-```
-
-Check Django:
-
-```bash
-python manage.py check
 ```
 
 Run the server:
@@ -870,36 +850,6 @@ Open:
     http://127.0.0.1:8000/
 
 ---
-
-# Assignment Requirements
-
-This project fulfills the required Assignment 12 features:
-
-- [x] Book Model
-- [x] Book Serializer
-- [x] REST API
-- [x] JWT Authentication
-- [x] Access Token
-- [x] Refresh Token
-- [x] Public Book Listing
-- [x] Public Book Details
-- [x] Authenticated Book Creation
-- [x] Authenticated Book Update
-- [x] Authenticated Book Delete
-- [x] Filtering by category
-- [x] Filtering by author
-- [x] Searching by title
-- [x] Searching by author
-- [x] Ordering by title
-- [x] Ordering by price
-- [x] Ordering by published date
-- [x] Pagination
-- [x] 5 books per page
-- [x] API throttling
-- [x] PostgreSQL
-- [x] PostgreSQL database dump
-- [x] Database restore process
-- [x] Web UI
 
 ---
 

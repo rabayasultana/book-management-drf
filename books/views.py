@@ -101,3 +101,9 @@ def book_delete(request, pk):
             'book': book
         }
     )
+    
+def api_home(request):
+    return render(
+        request,
+        'books/api_home.html'
+    )

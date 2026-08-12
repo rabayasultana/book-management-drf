@@ -8,6 +8,7 @@ from .views import (
     book_detail,
     book_edit,
     book_delete,
+    api_home,
 )
 
 
@@ -39,6 +40,11 @@ urlpatterns = [
         'book/<int:pk>/delete/',
         book_delete,
         name='book_delete'
+    ),
+    path(
+        'api/',
+        api_home,
+        name='api_home'
     ),
 
     # REST API

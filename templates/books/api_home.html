@@ -1,0 +1,604 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+Book Management API
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+
+    <div class="text-center mb-5">
+
+        <h1>
+            Book Management REST API
+        </h1>
+
+        <p class="text-muted">
+            Available REST API endpoints
+        </p>
+
+    </div>
+
+
+    <!-- Books API -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h4 class="mb-0">
+                📚 Book API
+            </h4>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <div class="list-group list-group-flush">
+
+
+                <!-- GET Books -->
+
+                <a
+                    href="{% url 'book-list-create' %}"
+                    class="list-group-item list-group-item-action">
+
+                    <div
+                        class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <span class="badge bg-success me-2">
+                                GET
+                            </span>
+
+                            <strong>
+                                /books/
+                            </strong>
+
+                            <div class="text-muted small mt-1">
+                                View all books
+                            </div>
+
+                        </div>
+
+                        <span>
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <!-- POST Books -->
+
+                <a
+                    href="{% url 'book-list-create' %}"
+                    class="list-group-item list-group-item-action">
+
+                    <div
+                        class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <span class="badge bg-primary me-2">
+                                POST
+                            </span>
+
+                            <strong>
+                                /books/
+                            </strong>
+
+                            <div class="text-muted small mt-1">
+                                Create a new book
+                            </div>
+
+                        </div>
+
+                        <span>
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <!-- GET Book Details -->
+
+                <a
+                    href="{% url 'book-detail' 1 %}"
+                    class="list-group-item list-group-item-action">
+
+                    <div
+                        class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <span class="badge bg-success me-2">
+                                GET
+                            </span>
+
+                            <strong>
+                                /books/&lt;id&gt;/
+                            </strong>
+
+                            <div class="text-muted small mt-1">
+                                View one book
+                            </div>
+
+                        </div>
+
+                        <span>
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <!-- PATCH -->
+
+                <a
+                    href="{% url 'book-detail' 1 %}"
+                    class="list-group-item list-group-item-action">
+
+                    <div
+                        class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <span class="badge bg-warning text-dark me-2">
+                                PATCH
+                            </span>
+
+                            <strong>
+                                /books/&lt;id&gt;/
+                            </strong>
+
+                            <div class="text-muted small mt-1">
+                                Update a book
+                            </div>
+
+                        </div>
+
+                        <span>
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <!-- DELETE -->
+
+                <a
+                    href="{% url 'book-detail' 1 %}"
+                    class="list-group-item list-group-item-action">
+
+                    <div
+                        class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <span class="badge bg-danger me-2">
+                                DELETE
+                            </span>
+
+                            <strong>
+                                /books/&lt;id&gt;/
+                            </strong>
+
+                            <div class="text-muted small mt-1">
+                                Delete a book
+                            </div>
+
+                        </div>
+
+                        <span>
+                            →
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+    </div>
+    
+    
+    
+    <!-- Authentication -->
+    
+    <div class="card shadow-sm mb-4">
+    
+        <div class="card-header">
+    
+            <h4 class="mb-0">
+                🔐 Authentication
+            </h4>
+    
+        </div>
+    
+    
+        <div class="card-body p-0">
+    
+            <div class="list-group list-group-flush">
+    
+    
+                <!-- Obtain Token -->
+    
+                <a href="{% url 'token_obtain_pair' %}" class="list-group-item list-group-item-action">
+    
+                    <div class="d-flex justify-content-between align-items-center">
+    
+                        <div>
+    
+                            <span class="badge bg-primary me-2">
+                                POST
+                            </span>
+    
+                            <strong>
+                                /api/token/
+                            </strong>
+    
+                            <div class="text-muted small mt-1">
+                                Obtain JWT access and refresh tokens
+                            </div>
+    
+                        </div>
+    
+                        <span>
+                            →
+                        </span>
+    
+                    </div>
+    
+                </a>
+    
+    
+                <!-- Refresh Token -->
+    
+                <a href="{% url 'token_refresh' %}" class="list-group-item list-group-item-action">
+    
+                    <div class="d-flex justify-content-between align-items-center">
+    
+                        <div>
+
+                        <span class="badge bg-primary me-2">
+                            POST
+                        </span>
+
+                        <strong>
+                            /api/token/refresh/
+                        </strong>
+
+                        <div class="text-muted small mt-1">
+                            Refresh an expired access token
+                        </div>
+
+                    </div>
+
+                    <span>
+                        →
+                    </span>
+
+                </div>
+
+            </a>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+    <!-- Features -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header">
+
+        <h4 class="mb-0">
+            ⚙️ API Features
+        </h4>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="row g-3">
+
+
+            <!-- Searching -->
+
+            <div class="col-md-6">
+
+                <a
+                    href="{% url 'book-list-create' %}?search=Python"
+                    class="text-decoration-none text-dark">
+
+                    <div
+                        class="border rounded p-3 h-100">
+
+                        <strong>
+                            🔎 Searching
+                        </strong>
+
+                        <p class="text-muted mb-2 mt-1">
+
+                            Search by title or author.
+
+                        </p>
+
+                        <code>
+                            /books/?search=Python
+                        </code>
+
+                        <div class="mt-2">
+
+                            <span class="text-primary small">
+                                Try searching →
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- Ordering -->
+
+            <div class="col-md-6">
+
+                <a
+                    href="{% url 'book-list-create' %}?ordering=-price"
+                    class="text-decoration-none text-dark">
+
+                    <div
+                        class="border rounded p-3 h-100">
+
+                        <strong>
+                            🔽 Ordering
+                        </strong>
+
+                        <p class="text-muted mb-2 mt-1">
+
+                            Order by title, price or published date.
+
+                        </p>
+
+                        <code>
+                            /books/?ordering=-price
+                        </code>
+
+                        <div class="mt-2">
+
+                            <span class="text-primary small">
+                                Try ordering →
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- Filtering -->
+
+            <div class="col-md-6">
+
+                <a
+                    href="{% url 'book-list-create' %}?category=Programming"
+                    class="text-decoration-none text-dark">
+
+                    <div
+                        class="border rounded p-3 h-100">
+
+                        <strong>
+                            🔍 Filtering
+                        </strong>
+
+                        <p class="text-muted mb-2 mt-1">
+
+                            Filter by category or author.
+
+                        </p>
+
+                        <code>
+                            /books/?category=Programming
+                        </code>
+
+                        <div class="mt-2">
+
+                            <span class="text-primary small">
+                                Try filtering →
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- Pagination -->
+
+            <div class="col-md-6">
+
+                <a
+                    href="{% url 'book-list-create' %}?page=2"
+                    class="text-decoration-none text-dark">
+
+                    <div
+                        class="border rounded p-3 h-100">
+
+                        <strong>
+                            📄 Pagination
+                        </strong>
+
+                        <p class="text-muted mb-2 mt-1">
+
+                            5 books are displayed per page.
+
+                        </p>
+
+                        <code>
+                            /books/?page=2
+                        </code>
+
+                        <div class="mt-2">
+
+                            <span class="text-primary small">
+                                View page 2 →
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- JWT Authentication -->
+
+            <div class="col-md-6">
+
+                <div
+                    class="border rounded p-3 h-100">
+
+                    <strong>
+                        🛡️ JWT Authentication
+                    </strong>
+
+                    <p class="text-muted mb-0 mt-1">
+
+                        Required for creating, updating and
+                        deleting books.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Throttling -->
+
+            <div class="col-md-6">
+
+                <div
+                    class="border rounded p-3 h-100">
+
+                    <strong>
+                        🚦 Throttling
+                    </strong>
+
+                    <p class="text-muted mb-0 mt-1">
+
+                        Anonymous and authenticated request
+                        limits are configured.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- Example Request -->
+
+<div class="card shadow-sm mb-5">
+
+    <div class="card-header">
+
+        <h4 class="mb-0">
+            ⭐ Example API Request
+        </h4>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <p>
+            The API supports combining searching,
+            ordering and pagination:
+        </p>
+
+
+        <a
+            href="{% url 'book-list-create' %}?search=Python&ordering=-price&page=2"
+            class="text-decoration-none">
+
+            <pre class="bg-light p-3 rounded"><code>GET /books/?search=Python&ordering=-price&page=2</code></pre>
+
+        </a>
+
+
+        <p class="text-muted mb-0">
+
+            Searches for books containing
+            <strong>Python</strong>,
+            orders them by price from highest to lowest,
+            and returns page 2.
+
+        </p>
+
+        <div class="mt-3">
+
+            <a
+                href="{% url 'book-list-create' %}?search=Python&ordering=-price&page=2"
+                class="btn btn-primary">
+
+                Try This Request →
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+{% endblock %}

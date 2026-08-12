@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{{ book.title }} - Book Management
+{% endblock %}
+
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-8">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <!-- Book Title -->
+
+                <h1 class="mb-4">
+                    {{ book.title }}
+                </h1>
+
+
+                <!-- Book Information -->
+
+                <div class="book-details">
+
+                    <div class="mb-3">
+
+                        <strong>
+                            Author:
+                        </strong>
+
+                        <span>
+                            {{ book.author }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <strong>
+                            Category:
+                        </strong>
+
+                        <span>
+                            {{ book.category }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <strong>
+                            Price:
+                        </strong>
+
+                        <span>
+                            {{ book.price }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <strong>
+                            Published Date:
+                        </strong>
+
+                        <span>
+                            {{ book.published_date|date:"F d, Y" }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <strong>
+                            Book ID:
+                        </strong>
+
+                        <span>
+                            {{ book.id }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <hr>
+
+
+                <!-- Actions -->
+
+                <div class="d-flex gap-2">
+
+                    <a
+                        href="{% url 'book_list' %}"
+                        class="btn btn-secondary">
+
+                        Back to Books
+
+                    </a>
+
+
+                    {% if user.is_authenticated %}
+
+                    <a
+                        href="{% url 'book_edit' book.id %}"
+                        class="btn btn-primary">
+
+                        Edit Book
+
+                    </a>
+
+
+                    <a
+                        href="{% url 'book_delete' book.id %}"
+                        class="btn btn-danger">
+
+                        Delete Book
+
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

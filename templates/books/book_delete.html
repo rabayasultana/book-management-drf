@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+Delete Book - {{ book.title }}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-7">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body text-center">
+
+                <h2 class="mb-4 text-danger">
+                    Delete Book
+                </h2>
+
+
+                <p class="lead">
+
+                    Are you sure you want to delete
+
+                    <strong>
+                        "{{ book.title }}"
+                    </strong>?
+
+                </p>
+
+                <form id="csrf-form">
+                    {% csrf_token %}
+                </form>
+
+
+                <p class="text-muted">
+
+                    This action cannot be undone.
+
+                </p>
+
+
+                <div
+                    id="error-message"
+                    class="alert alert-danger d-none">
+                </div>
+
+
+                <div
+                    id="success-message"
+                    class="alert alert-success d-none">
+                </div>
+
+
+                <div class="d-flex justify-content-center gap-2">
+
+                    <a
+                        href="{% url 'book_detail' book.id %}"
+                        class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-danger"
+                        id="delete-button">
+
+                        Delete Book
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+const deleteButton =
+    document.getElementById('delete-button');
+
+const errorMessage =
+    document.getElementById('error-message');
+
+const successMessage =
+    document.getElementById('success-message');
+
+
+deleteButton.addEventListener(
+    'click',
+    function() {
+
+        const accessToken =
+            localStorage.getItem('access_token');
+
+
+        if (!accessToken) {
+
+            errorMessage.textContent =
+                'You are not authenticated. Please login again.';
+
+            errorMessage.classList.remove(
+                'd-none'
+            );
+
+            return;
+        }
+
+
+        deleteButton.disabled = true;
+
+        deleteButton.textContent =
+            'Deleting...';
+
+        const csrfToken =
+            document.querySelector(
+                '[name=csrfmiddlewaretoken]'
+            ).value;
+
+        fetch(
+            `/books/{{ book.id }}/`,
+            {
+                method: 'DELETE',
+
+                headers: {
+
+                    'Authorization':
+                        'Bearer ' + accessToken,
+                    'X-CSRFToken':
+                        csrfToken
+                }
+            }
+        )
+
+
+        .then(async response => {
+
+            if (!response.ok) {
+
+                const data =
+                    await response.json();
+
+                throw new Error(
+                    JSON.stringify(data)
+                );
+            }
+
+        })
+
+
+        .then(() => {
+
+            successMessage.textContent =
+                'Book deleted successfully!';
+
+            successMessage.classList.remove(
+                'd-none'
+            );
+
+            errorMessage.classList.add(
+                'd-none'
+            );
+
+
+            setTimeout(() => {
+
+                window.location.href =
+                    "{% url 'book_list' %}";
+
+            }, 800);
+
+        })
+
+
+        .catch(error => {
+
+            console.error(error);
+
+            errorMessage.textContent =
+                'Failed to delete book: ' +
+                error.message;
+
+            errorMessage.classList.remove(
+                'd-none'
+            );
+
+            deleteButton.disabled = false;
+
+            deleteButton.textContent =
+                'Delete Book';
+
+        });
+
+    }
+);
+
+</script>
+
+{% endblock %}

@@ -1,23 +1,42 @@
+/* =========================
+   Global Reset
+========================= */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+
+/* =========================
+   Body
+========================= */
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #f4f6f9;
 }
 
+
+/* =========================
+   Authentication Container
+========================= */
+
 .auth-container {
     width: 100%;
     max-width: 450px;
     margin: 60px auto;
-    background: #ffffff;
     padding: 35px;
+    background: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,.15);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
+
+
+/* =========================
+   Heading
+========================= */
 
 .auth-container h2 {
     text-align: center;
@@ -25,16 +44,23 @@ body {
     color: #333;
 }
 
+
+/* =========================
+   Form
+========================= */
+
 .auth-container p {
     margin-bottom: 18px;
 }
 
+
 .auth-container label {
     display: block;
-    font-weight: bold;
     margin-bottom: 6px;
+    font-weight: bold;
     color: #444;
 }
+
 
 .auth-container input {
     width: 100%;
@@ -44,10 +70,17 @@ body {
     font-size: 15px;
 }
 
+
 .auth-container input:focus {
     outline: none;
     border-color: #0d6efd;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.1);
 }
+
+
+/* =========================
+   Form Help Text
+========================= */
 
 .auth-container ul {
     margin-top: 5px;
@@ -56,40 +89,74 @@ body {
     font-size: 13px;
 }
 
+
+/* =========================
+   Form Errors
+========================= */
+
 .auth-container .errorlist {
-    color: red;
-    list-style: none;
     margin-bottom: 8px;
     margin-left: 0;
+    color: #dc3545;
+    list-style: none;
+    font-size: 14px;
 }
+
+
+/* =========================
+   Authentication Button
+========================= */
 
 .auth-btn {
     width: 100%;
     padding: 12px;
+    margin-top: 10px;
     border: none;
+    border-radius: 6px;
     background: #0d6efd;
     color: white;
-    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
-    margin-top: 10px;
 }
+
 
 .auth-btn:hover {
     background: #0b5ed7;
 }
+
+
+/* =========================
+   Login / Register Link
+========================= */
 
 .auth-link {
     margin-top: 20px;
     text-align: center;
 }
 
+
 .auth-link a {
-    text-decoration: none;
     color: #0d6efd;
     font-weight: bold;
+    text-decoration: none;
 }
+
 
 .auth-link a:hover {
     text-decoration: underline;
+}
+
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 576px) {
+
+    .auth-container {
+        width: 90%;
+        margin: 30px auto;
+        padding: 25px;
+    }
+
 }

@@ -1,144 +1,507 @@
 {% extends 'base.html' %}
 
-{% block title %}Books - Book Management{% endblock %}
+
+{% block title %}
+Books - Book Management
+{% endblock %}
+
 
 {% block content %}
 
+
 <div class="d-flex justify-content-between align-items-center mb-4">
+
     <div>
-        <h1>Books</h1>
+
+        <h1>
+            Books
+        </h1>
+
         <p class="text-muted">
             Browse our collection of books.
         </p>
+
     </div>
 
-    {% if user.is_authenticated %}
-        <a href="{% url 'book_create' %}" class="btn btn-primary">
-            + Add Book
-        </a>
-    {% endif %}
 </div>
 
 
-<div id="loading" class="text-center py-5">
-    <div class="spinner-border" role="status"></div>
-    <p class="mt-2">Loading books...</p>
+
+<!-- Loading -->
+
+<div
+    id="loading"
+    class="text-center py-5">
+
+    <div
+        class="spinner-border"
+        role="status">
+    </div>
+
+    <p class="mt-2">
+        Loading books...
+    </p>
+
 </div>
 
 
-<div id="error-message" class="alert alert-danger d-none">
+
+<!-- Error -->
+
+<div
+    id="error-message"
+    class="alert alert-danger d-none">
 </div>
 
 
-<div id="book-container" class="row g-4">
+
+<!-- Books -->
+
+<div
+    id="book-container"
+    class="row g-4">
+</div>
+
+
+
+<!-- Pagination -->
+
+<div
+    id="pagination"
+    class="d-flex justify-content-center align-items-center mt-5 d-none">
+
+    <button
+        id="previous-button"
+        class="btn btn-outline-primary me-3">
+
+        ← Previous
+
+    </button>
+
+
+    <span
+        id="page-info"
+        class="fw-bold">
+    </span>
+
+
+    <button
+        id="next-button"
+        class="btn btn-outline-primary ms-3">
+
+        Next →
+
+    </button>
+
 </div>
 
 
 {% endblock %}
 
+
+
 {% block extra_js %}
+
 
 <script>
 
-    const bookContainer = document.getElementById('book-container');
-    const loading = document.getElementById('loading');
-    const errorMessage = document.getElementById('error-message');
+    const bookContainer =
+        document.getElementById('book-container');
+
+    const loading =
+        document.getElementById('loading');
+
+    const errorMessage =
+        document.getElementById('error-message');
+
+    const pagination =
+        document.getElementById('pagination');
+
+    const previousButton =
+        document.getElementById('previous-button');
+
+    const nextButton =
+        document.getElementById('next-button');
+
+    const pageInfo =
+        document.getElementById('page-info');
 
 
-    function loadBooks() {
+    let currentPage = 1;
 
-        fetch('/books/')
+
+    /*
+     * Load books from API
+     */
+    function loadBooks(url = '/books/') {
+
+        loading.classList.remove('d-none');
+
+        errorMessage.classList.add('d-none');
+
+        bookContainer.innerHTML = '';
+
+
+        fetch(url)
+
             .then(response => {
 
                 if (!response.ok) {
-                    throw new Error('Failed to load books.');
+
+                    throw new Error(
+                        'Failed to load books.'
+                    );
+
                 }
 
                 return response.json();
+
             })
+
 
             .then(data => {
 
-                loading.classList.add('d-none');
+                loading.classList.add(
+                    'd-none'
+                );
 
-                displayBooks(data.results);
+
+                displayBooks(
+                    data.results
+                );
+
+
+                updatePagination(
+                    data
+                );
+
             })
+
 
             .catch(error => {
 
-                loading.classList.add('d-none');
+                loading.classList.add(
+                    'd-none'
+                );
 
-                errorMessage.textContent = error.message;
-                errorMessage.classList.remove('d-none');
+
+                errorMessage.textContent =
+                    error.message;
+
+                errorMessage.classList.remove(
+                    'd-none'
+                );
+
             });
+
     }
 
 
+
+    /*
+     * Display books
+     */
     function displayBooks(books) {
 
         bookContainer.innerHTML = '';
 
+
         if (books.length === 0) {
 
             bookContainer.innerHTML = `
+
                 <div class="col-12">
+
                     <div class="alert alert-info">
+
                         No books found.
+
                     </div>
+
                 </div>
+
             `;
 
             return;
+
         }
+
 
 
         books.forEach(book => {
 
+
             const bookCard = `
+
                 <div class="col-md-4">
 
-                    <div class="card h-100 shadow-sm">
+                    <div
+                        class="card h-100 shadow-sm book-card"
+                        style="cursor: pointer;"
+                        onclick="openBookDetails(${book.id})">
+
 
                         <div class="card-body">
 
+
                             <h5 class="card-title">
+
                                 ${book.title}
+
                             </h5>
 
+
                             <p class="card-text">
-                                <strong>Author:</strong>
+
+                                <strong>
+                                    Author:
+                                </strong>
+
                                 ${book.author}
+
                             </p>
 
+
                             <p class="card-text">
-                                <strong>Category:</strong>
+
+                                <strong>
+                                    Category:
+                                </strong>
+
                                 ${book.category}
+
                             </p>
 
+
                             <p class="card-text">
-                                <strong>Price:</strong>
+
+                                <strong>
+                                    Price:
+                                </strong>
+
                                 ৳${book.price}
+
                             </p>
 
+
                             <p class="card-text">
-                                <strong>Published:</strong>
+
+                                <strong>
+                                    Published:
+                                </strong>
+
                                 ${book.published_date}
+
                             </p>
+
+
+                            <div class="mt-3">
+
+                                <span
+                                    class="text-primary">
+
+                                    View Details →
+
+                                </span>
+
+                            </div>
+
 
                         </div>
 
                     </div>
 
                 </div>
+
             `;
 
+
             bookContainer.innerHTML += bookCard;
+
         });
+
     }
 
 
-    loadBooks();
+
+    /*
+     * Open book details page
+     */
+    function openBookDetails(bookId) {
+
+        window.location.href =
+            `/book/${bookId}/`;
+
+    }
+
+
+
+    /*
+     * Update pagination
+     */
+    function updatePagination(data) {
+
+        pagination.classList.remove(
+            'd-none'
+        );
+
+
+        previousButton.disabled =
+            !data.previous;
+
+
+        nextButton.disabled =
+            !data.next;
+
+
+        /*
+         * Get current page
+         */
+        const urlParams =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        currentPage =
+            urlParams.get('page') || 1;
+
+
+        pageInfo.textContent =
+            `Page ${currentPage}`;
+
+
+        /*
+         * Save API URLs
+         */
+        previousButton.dataset.url =
+            data.previous || '';
+
+
+        nextButton.dataset.url =
+            data.next || '';
+
+    }
+
+
+
+    /*
+     * Previous page
+     */
+    previousButton.addEventListener(
+        'click',
+        function() {
+
+            const url =
+                this.dataset.url;
+
+
+            if (url) {
+
+                loadBooks(url);
+
+                window.history.pushState(
+                    {},
+                    '',
+                    `?page=${getPageNumber(url)}`
+                );
+
+            }
+
+        }
+    );
+
+
+
+    /*
+     * Next page
+     */
+    nextButton.addEventListener(
+        'click',
+        function() {
+
+            const url =
+                this.dataset.url;
+
+
+            if (url) {
+
+                loadBooks(url);
+
+                window.history.pushState(
+                    {},
+                    '',
+                    `?page=${getPageNumber(url)}`
+                );
+
+            }
+
+        }
+    );
+
+
+
+    /*
+     * Get page number from API URL
+     */
+    function getPageNumber(url) {
+
+        const urlObject =
+            new URL(
+                url,
+                window.location.origin
+            );
+
+
+        return (
+            urlObject.searchParams.get(
+                'page'
+            ) || 1
+        );
+
+    }
+
+
+
+    /*
+     * Load the requested page when
+     * the browser URL contains ?page=
+     */
+    function loadInitialPage() {
+
+        const urlParams =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const page =
+            urlParams.get('page');
+
+
+        if (page) {
+
+            loadBooks(
+                `/books/?page=${page}`
+            );
+
+        } else {
+
+            loadBooks();
+
+        }
+
+    }
+
+
+
+    /*
+     * Initial load
+     */
+    loadInitialPage();
+
 
 </script>
+
 
 {% endblock %}

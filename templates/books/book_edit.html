@@ -2,7 +2,7 @@
 
 
 {% block title %}
-Add Book - Book Management
+Edit Book - {{ book.title }}
 {% endblock %}
 
 
@@ -17,30 +17,29 @@ Add Book - Book Management
             <div class="card-body">
 
                 <h2 class="mb-4">
-                    Add New Book
+                    Edit Book
                 </h2>
 
 
-                <!-- Error Message -->
                 <div
                     id="error-message"
                     class="alert alert-danger d-none">
                 </div>
 
 
-                <!-- Success Message -->
                 <div
                     id="success-message"
                     class="alert alert-success d-none">
                 </div>
 
 
-                <form id="book-form">
+                <form id="book-edit-form">
 
                     {% csrf_token %}
 
 
                     <!-- Title -->
+
                     <div class="mb-3">
 
                         <label
@@ -53,7 +52,7 @@ Add Book - Book Management
                             type="text"
                             class="form-control"
                             id="title"
-                            name="title"
+                            value="{{ book.title }}"
                             required
                         >
 
@@ -61,6 +60,7 @@ Add Book - Book Management
 
 
                     <!-- Author -->
+
                     <div class="mb-3">
 
                         <label
@@ -73,7 +73,7 @@ Add Book - Book Management
                             type="text"
                             class="form-control"
                             id="author"
-                            name="author"
+                            value="{{ book.author }}"
                             required
                         >
 
@@ -81,6 +81,7 @@ Add Book - Book Management
 
 
                     <!-- Category -->
+
                     <div class="mb-3">
 
                         <label
@@ -93,7 +94,7 @@ Add Book - Book Management
                             type="text"
                             class="form-control"
                             id="category"
-                            name="category"
+                            value="{{ book.category }}"
                             required
                         >
 
@@ -101,6 +102,7 @@ Add Book - Book Management
 
 
                     <!-- Price -->
+
                     <div class="mb-3">
 
                         <label
@@ -113,7 +115,7 @@ Add Book - Book Management
                             type="number"
                             class="form-control"
                             id="price"
-                            name="price"
+                            value="{{ book.price }}"
                             step="0.01"
                             min="0"
                             required
@@ -123,6 +125,7 @@ Add Book - Book Management
 
 
                     <!-- Published Date -->
+
                     <div class="mb-3">
 
                         <label
@@ -135,14 +138,13 @@ Add Book - Book Management
                             type="date"
                             class="form-control"
                             id="published_date"
-                            name="published_date"
+                            value="{{ book.published_date|date:'Y-m-d' }}"
                             required
                         >
 
                     </div>
 
 
-                    <!-- Buttons -->
                     <div class="d-flex gap-2">
 
                         <button
@@ -150,13 +152,13 @@ Add Book - Book Management
                             class="btn btn-primary"
                             id="submit-button">
 
-                            Add Book
+                            Update Book
 
                         </button>
 
 
                         <a
-                            href="{% url 'book_list' %}"
+                            href="{% url 'book_detail' book.id %}"
                             class="btn btn-secondary">
 
                             Cancel
@@ -175,6 +177,7 @@ Add Book - Book Management
 
 </div>
 
+
 {% endblock %}
 
 
@@ -183,7 +186,7 @@ Add Book - Book Management
 <script>
 
 const form =
-    document.getElementById('book-form');
+    document.getElementById('book-edit-form');
 
 const errorMessage =
     document.getElementById('error-message');
@@ -195,36 +198,25 @@ const submitButton =
     document.getElementById('submit-button');
 
 
-form.addEventListener('submit', function (event) {
+form.addEventListener('submit', function(event) {
 
     event.preventDefault();
 
-
-    /*
-     * Get JWT access token from localStorage.
-     */
 
     const accessToken =
         localStorage.getItem('access_token');
 
 
-    /*
-     * If there is no access token,
-     * send the user to login.
-     */
-
     if (!accessToken) {
 
-        window.location.href =
-            "{% url 'login' %}";
+        errorMessage.textContent =
+            'You are not authenticated. Please login again.';
+
+        errorMessage.classList.remove('d-none');
 
         return;
     }
 
-
-    /*
-     * Collect form data.
-     */
 
     const bookData = {
 
@@ -242,80 +234,47 @@ form.addEventListener('submit', function (event) {
 
         published_date:
             document.getElementById('published_date').value
-
     };
 
 
-    /*
-     * Disable button while request is running.
-     */
-
     submitButton.disabled = true;
 
-    submitButton.textContent =
-        'Adding...';
+    submitButton.textContent = 'Updating...';
 
-
-    /*
-     * Send POST request to REST API.
-     */
 
     const csrfToken =
-        document.querySelector(
-            '[name=csrfmiddlewaretoken]'
-        ).value;
+    document.querySelector(
+        '[name=csrfmiddlewaretoken]'
+    ).value;
 
+    fetch(
+        `/books/{{ book.id }}/`,
+        {
+            method: 'PATCH',
 
-    fetch("/books/", {
-        method: "POST",
+            headers: {
 
-        headers: {
-            "Content-Type": "application/json",
+                'Content-Type':
+                    'application/json',
 
-            "Authorization":
-                "Bearer " + accessToken,
+                'Authorization':
+                    'Bearer ' + accessToken,
 
-            "X-CSRFToken": csrfToken
-        },
+                'X-CSRFToken':
+                    csrfToken
+            },
 
-        body: JSON.stringify(bookData)
-    })
+            body:
+                JSON.stringify(bookData)
+        }
+    )
 
-
-    /*
-     * Process API response.
-     */
 
     .then(async response => {
 
         const data =
             await response.json();
 
-
-        /*
-         * JWT expired or invalid.
-         */
-
-        if (response.status === 401) {
-
-            localStorage.removeItem(
-                'access_token'
-            );
-
-            localStorage.removeItem(
-                'refresh_token'
-            );
-
-            window.location.href =
-                "{% url 'login' %}";
-
-            return;
-        }
-
-
-        /*
-         * Other API errors.
-         */
 
         if (!response.ok) {
 
@@ -330,14 +289,10 @@ form.addEventListener('submit', function (event) {
     })
 
 
-    /*
-     * Book successfully created.
-     */
-
     .then(data => {
 
         successMessage.textContent =
-            'Book added successfully!';
+            'Book updated successfully!';
 
         successMessage.classList.remove(
             'd-none'
@@ -348,40 +303,27 @@ form.addEventListener('submit', function (event) {
         );
 
 
-        form.reset();
-
-
-        /*
-         * Go back to book list.
-         */
-
         setTimeout(() => {
 
             window.location.href =
-                "{% url 'book_list' %}";
+                "{% url 'book_detail' book.id %}";
 
-        }, 1000);
+        }, 800);
 
     })
 
-
-    /*
-     * Handle errors.
-     */
 
     .catch(error => {
 
         console.error(error);
 
-
         errorMessage.textContent =
-            'Failed to add book. Please check the entered data.';
-
+            'Failed to update book: ' +
+            error.message;
 
         errorMessage.classList.remove(
             'd-none'
         );
-
 
         successMessage.classList.add(
             'd-none'
@@ -390,16 +332,12 @@ form.addEventListener('submit', function (event) {
     })
 
 
-    /*
-     * Enable button again.
-     */
-
     .finally(() => {
 
         submitButton.disabled = false;
 
         submitButton.textContent =
-            'Add Book';
+            'Update Book';
 
     });
 

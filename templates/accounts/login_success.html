@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}
+Logging in...
+{% endblock %}
+
+
+{% block content %}
+
+<div class="auth-container text-center">
+
+    <h2>Login Successful</h2>
+
+    <p>
+        Redirecting...
+    </p>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+    // Save JWT tokens
+    localStorage.setItem(
+        "access_token",
+        "{{ access_token }}"
+    );
+
+    localStorage.setItem(
+        "refresh_token",
+        "{{ refresh_token }}"
+    );
+
+
+    // Redirect to requested page or book list
+    const nextUrl = "{{ next_url|escapejs }}";
+
+    if (nextUrl) {
+
+        window.location.href = nextUrl;
+
+    } else {
+
+        window.location.href = "{% url 'book_list' %}";
+
+    }
+
+</script>
+
+{% endblock %}

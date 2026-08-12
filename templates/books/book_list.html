@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}Books - Book Management{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Books</h1>
+        <p class="text-muted">
+            Browse our collection of books.
+        </p>
+    </div>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'book_create' %}" class="btn btn-primary">
+            + Add Book
+        </a>
+    {% endif %}
+</div>
+
+
+<div id="loading" class="text-center py-5">
+    <div class="spinner-border" role="status"></div>
+    <p class="mt-2">Loading books...</p>
+</div>
+
+
+<div id="error-message" class="alert alert-danger d-none">
+</div>
+
+
+<div id="book-container" class="row g-4">
+</div>
+
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+    const bookContainer = document.getElementById('book-container');
+    const loading = document.getElementById('loading');
+    const errorMessage = document.getElementById('error-message');
+
+
+    function loadBooks() {
+
+        fetch('/books/')
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error('Failed to load books.');
+                }
+
+                return response.json();
+            })
+
+            .then(data => {
+
+                loading.classList.add('d-none');
+
+                displayBooks(data.results);
+            })
+
+            .catch(error => {
+
+                loading.classList.add('d-none');
+
+                errorMessage.textContent = error.message;
+                errorMessage.classList.remove('d-none');
+            });
+    }
+
+
+    function displayBooks(books) {
+
+        bookContainer.innerHTML = '';
+
+        if (books.length === 0) {
+
+            bookContainer.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        No books found.
+                    </div>
+                </div>
+            `;
+
+            return;
+        }
+
+
+        books.forEach(book => {
+
+            const bookCard = `
+                <div class="col-md-4">
+
+                    <div class="card h-100 shadow-sm">
+
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                ${book.title}
+                            </h5>
+
+                            <p class="card-text">
+                                <strong>Author:</strong>
+                                ${book.author}
+                            </p>
+
+                            <p class="card-text">
+                                <strong>Category:</strong>
+                                ${book.category}
+                            </p>
+
+                            <p class="card-text">
+                                <strong>Price:</strong>
+                                ৳${book.price}
+                            </p>
+
+                            <p class="card-text">
+                                <strong>Published:</strong>
+                                ${book.published_date}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            `;
+
+            bookContainer.innerHTML += bookCard;
+        });
+    }
+
+
+    loadBooks();
+
+</script>
+
+{% endblock %}
